@@ -1,6 +1,7 @@
 ## Description
 
-Fork from (vite-plugin-solid)[https://github.com/solidjs/vite-plugin-solid)
+Fork from [vite-plugin-solid](https://github.com/solidjs/vite-plugin-solid).
+
 To support multiple `.tsx` supporting framework involved in a same project, prevent them processing the same file.
 
 You can find some guys also wanna same thing like me lol e.g. [here](https://github.com/vitejs/vite/issues/6921)
@@ -15,7 +16,7 @@ pnpm add -D vite-plugin-solid-with-excludes
 
 - Can set `includes` to only apply plugin for specify extensions
 - Can forbid `esbuild` in cases you already have one
-- Other things are all same to (origin)[https://github.com/solidjs/vite-plugin-solid)
+- Other things are all same to [origin](https://github.com/solidjs/vite-plugin-solid)
 
 ## Example
 
@@ -36,7 +37,8 @@ pnpm add -D vite-plugin-solid-with-excludes
 }
 ```
 
-as this one is only limit the includes from solid, so please always put 'vite-plugin-solid-with-excludes' above the `vite-plugin-react`
+> as this one is only limit the includes from solid, so please always put `vite-plugin-solid-with-excludes` above the `vite-plugin-react`
+
 ```
 // vite.config.ts
 import react from '@vitejs/plugin-react';
