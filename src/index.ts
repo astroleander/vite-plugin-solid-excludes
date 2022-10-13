@@ -22,6 +22,12 @@ export interface ExtensionOptions {
 /** Configuration options for vite-plugin-solid. */
 export interface Options {
   /**
+   * Explicitly forbidden esbuild if declared in the configuration.
+   *
+   * @default {}
+   */
+  esbuild: boolean;
+  /**
    * This will inject solid-js/dev in place of solid-js in dev mode. Has no
    * effect in prod. If set to `false`, it won't inject it in dev. This is
    * useful for extra logs and debugging.
@@ -331,11 +337,8 @@ export default function solidPlugin(options: Partial<Options> = {}): Plugin {
         : [];
 
       return {
-        /**
-         * We only need esbuild on .ts or .js files.
-         * .tsx & .jsx files are handled by us
-         */
-        resolve: {
+         esbuild: options.esbuild === false ? null : { include: /\.ts$/ },
+         resolve: {
           conditions: ['solid', ...(replaceDev ? ['development'] : [])],
           dedupe: nestedDeps,
           alias: [{ find: /^solid-refresh$/, replacement: runtimePublicPath }],
