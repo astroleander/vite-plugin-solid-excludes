@@ -1,5 +1,5 @@
 {
-  "name": "vite-plugin-solid",
+  "name": "vite-plugin-solid-with-excludes",
   "version": "2.3.9",
   "description": "solid-js integration plugin for vite 3",
   "type": "module",
@@ -67,5 +67,9 @@
     "solid-js": "^1.3.17",
     "vite": "^3.0.0"
   },
-  "packageManager": "pnpm@6.24.4"
+  "packageManager": "pnpm@6.24.4",
+  "contributors": [{
+    "name" : "astro-",
+    "email" : "astroleander@gmail.com"
+  }]
 }

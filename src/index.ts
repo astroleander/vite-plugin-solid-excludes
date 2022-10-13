@@ -44,6 +44,12 @@ export interface Options {
    */
   hot: boolean;
   /**
+   * This overwrite extensions that should be processed by solid vite-plugin-solid.
+   * 
+   * @default {}
+   */
+  includes?: (string | [string, ExtensionOptions])[];
+  /**
    * This registers additional extensions that should be processed by
    * vite-plugin-solid.
    *
@@ -57,9 +63,9 @@ export interface Options {
    * @default {}
    */
   babel:
-    | TransformOptions
-    | ((source: string, id: string, ssr: boolean) => TransformOptions)
-    | ((source: string, id: string, ssr: boolean) => Promise<TransformOptions>);
+  | TransformOptions
+  | ((source: string, id: string, ssr: boolean) => TransformOptions)
+  | ((source: string, id: string, ssr: boolean) => Promise<TransformOptions>);
   typescript: {
     /**
      * Forcibly enables jsx parsing. Otherwise angle brackets will be treated as
@@ -244,10 +250,15 @@ export interface Options {
   };
 }
 
-function getExtension(filename: string): string {
-  const index = filename.lastIndexOf('.');
-  return index < 0 ? '' : filename.substring(index).replace(/\?.+$/, '');
+function getExtension(id: string, allExtensions: string[]): string {
+  const index = allExtensions.reduce((result, extension) => {
+    const startIndex = id.lastIndexOf(extension);
+    if (startIndex !== -1) return startIndex;
+    return Math.max(-1, result);
+  }, -1);
+  return index < 0 ? '' : id.substring(index).replace(/\?.+$/, '');
 }
+
 function containsSolidField(fields) {
   const keys = Object.keys(fields);
   for (let i = 0; i < keys.length; i++) {
@@ -324,7 +335,6 @@ export default function solidPlugin(options: Partial<Options> = {}): Plugin {
          * We only need esbuild on .ts or .js files.
          * .tsx & .jsx files are handled by us
          */
-        esbuild: { include: /\.ts$/ },
         resolve: {
           conditions: ['solid', ...(replaceDev ? ['development'] : [])],
           dedupe: nestedDeps,
@@ -358,13 +368,14 @@ export default function solidPlugin(options: Partial<Options> = {}): Plugin {
 
     async transform(source, id, transformOptions) {
       const isSsr = transformOptions && transformOptions.ssr;
-      const currentFileExtension = getExtension(id);
 
-      const extensionsToWatch = [...(options.extensions || []), '.tsx', '.jsx'];
-      const allExtensions = extensionsToWatch.map((extension) =>
+      const supportedExtensions = options.includes || ['.tsx', '.jsx'];
+      const extensionsToWatch = [...(options.extensions || []), ...supportedExtensions];
+      const allExtensions = supportedExtensions.map((extension) =>
         // An extension can be a string or a tuple [extension, options]
         typeof extension === 'string' ? extension : extension[0],
       );
+      const currentFileExtension = getExtension(id, allExtensions);
 
       if (!allExtensions.includes(currentFileExtension)) {
         return null;
