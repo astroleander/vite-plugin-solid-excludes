@@ -1,3 +1,5 @@
+# Feature Docs
+
 ## Description
 
 Fork from [vite-plugin-solid](https://github.com/solidjs/vite-plugin-solid).
@@ -57,7 +59,14 @@ export default defineConfig({
   ],
 ```
 
+## TODO
+
+- excludes
+- auto-sync-scripts
+
 ---
+
+# Offical Docs
 
 <p>
   <img width="100%" src="https://raw.githubusercontent.com/solidjs/vite-plugin-solid/master/banner.png" alt="Solid Vite Plugin">
